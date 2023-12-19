@@ -55,7 +55,7 @@ server.addService(apiProto.ApiService.service, {
   },
 });
 
-const PORT_HTTP = 50051;
+const PORT_HTTP = 50052;
 App.get('/api/mahasiswa-info-all', async (req, res) => {
   try {
     // Menggunakan koneksi database untuk mengambil data
