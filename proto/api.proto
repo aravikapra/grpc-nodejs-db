@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+// Definisi pesan untuk tbl_registrasi
+message Registrasi {
+  int32 id = 1;
+  string nik = 2;
+  string status = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp modified_at = 5;
+}
+
+// Definisi pesan untuk tbl_mahasiswa
+message Mahasiswa {
+  int32 id = 1;
+  int32 reg_id = 2;
+  string nim = 3;
+  string nama = 4;
+  string alamat = 5;
+  string jenis_kelamin = 6;
+  string created_at = 7;
+  string modified_at = 8;
+  string nik = 9;
+  string status = 10;
+}
+
+// Definisi layanan gRPC
+service ApiService {
+  rpc GetRegistrasiInfo (RegistrasiRequest) returns (RegistrasiResponse);
+  rpc GetMahasiswaInfo (MahasiswaRequest) returns (MahasiswaResponse);
+  rpc GetMahasiswaInfoAll (Empty) returns (MahasiswaResponseAll);
+}
+
+message Empty {}
+
+// Definisi pesan untuk permintaan GetRegistrasiInfo
+message RegistrasiRequest {
+  int32 id = 1;
+}
+
+// Definisi pesan untuk respons GetRegistrasiInfo
+message RegistrasiResponse {
+  Registrasi registrasi = 1;
+}
+
+// Definisi pesan untuk permintaan GetMahasiswaInfo
+message MahasiswaRequest {
+  int32 id = 1;
+}
+
+// Definisi pesan untuk respons GetMahasiswaInfo
+message MahasiswaResponse {
+  Mahasiswa mahasiswa = 1;
+}
+// Definisi pesan untuk respons GetMahasiswaInfoAll
+message MahasiswaResponseAll {
+  repeated Mahasiswa mahasiswas = 1;
+}

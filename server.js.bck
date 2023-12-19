@@ -1,0 +1,65 @@
+const express = require('express');
+const mysql = require('mysql2/promise');
+const app = express();
+
+// Fungsi utama yang bersifat async
+const main = async () => {
+  // Konfigurasi koneksi database
+  const db = await mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'db_ms_grpc',
+  });
+
+  app.get('/api/mahasiswa-info-all', async (req, res) => {
+    try {
+      // Gantilah dengan fungsi untuk mengambil data dari database MySQL
+      const mahasiswaData = await getMahasiswaInfoAllFromDatabase(db);
+
+      // Kirim data dari database sebagai respons API
+      res.json({ mahasiswas: mahasiswaData });
+    } catch (error) {
+      console.error('Error:', error.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  // Fungsi untuk mengambil semua informasi mahasiswa dari database
+  const getMahasiswaInfoAllFromDatabase = async (db) => {
+    const query = 'SELECT m.*, r.* FROM tbl_mahasiswa m JOIN tbl_registrasi r ON m.reg_id = r.id';
+
+    try {
+      const [rows] = await db.query(query);
+
+      const mahasiswas = rows.map((row) => ({
+        id: row.id,
+        reg_id: row.reg_id,
+        nim: row.nim,
+        nama: row.nama,
+        alamat: row.alamat,
+        jenis_kelamin: row.jenis_kelamin,
+        created_at: row.created_at,
+        modified_at: row.modified_at,
+        nik: row.nik,
+        status: row.status,
+      }));
+
+      return mahasiswas;
+    } catch (error) {
+      console.error('Error fetching data from database:', error);
+      throw error;
+    }
+  };
+
+  // Tidak perlu lagi melakukan koneksi di sini
+  // db.connect() tidak diperlukan dalam kasus ini
+
+  // Mulai server
+  app.listen(50052, () => {
+    console.log('Server is running on port 50052');
+  });
+};
+
+// Panggil fungsi utama
+main();
